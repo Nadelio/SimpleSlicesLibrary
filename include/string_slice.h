@@ -2,6 +2,7 @@
 #define STRING_SLICE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 
 // various integer typedefs
@@ -33,6 +34,11 @@ StringSlice string_to_slice(const char* string);
 /// @param string The source string
 /// @param offset The offset of the start of the slice
 /// @param length The total length of the slice
-StringSlice slice_from_range(const char* string, u64 offset, u64 length);
+StringSlice slice_from_range(char* string, u64 offset, u64 length);
+
+/// @brief Compares two string slices together and checks if they are equivalent or not
+/// @param str_1 The first slice
+/// @param str_2 The second slice
+bool streql(const StringSlice* str_1, const StringSlice* str_2);
 
 #endif // STRING_SLICE_H

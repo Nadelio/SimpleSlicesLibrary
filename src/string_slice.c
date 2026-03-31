@@ -17,11 +17,25 @@ StringSlice string_to_slice(const char* string) {
 /// @param string The source string
 /// @param offset The offset of the start of the slice
 /// @param length The total length of the slice
-StringSlice slice_from_range(const char* string, u64 offset, u64 length) {
-    if(offset > strlen(string)) return (StringSlice){ .begin = (char*)(string + strlen(string)), .len = 0};
-    if(length <= strlen(string + offset)) return (StringSlice){ .begin = (char*)(string + offset), .len = length};
-    else {
+StringSlice slice_from_range(char* string, u64 offset, u64 length) {
+    // this code feels really dirty, pointer arithmetic is weird...
+
+    if(offset > strlen(string)) {
+        (string + strlen(string))[0] = '\0'; // need to truncate string so that string_to_slice() works properly
+        return (StringSlice){ .begin = (char*)(string + strlen(string)), .len = 0};
+    }
+    if(length <= strlen(string + offset)) {
+        (string + offset)[length] = '\0'; // need to truncate string so that string_to_slice() works properly
+        return (StringSlice){ .begin = (char*)(string + offset), .len = length};
+    } else {
         u64 offsetted_string_length = strlen(string + offset);
         return (StringSlice) { .begin = (char*)(string + offset), .len = offsetted_string_length};
     }
+}
+
+/// @brief Compares two string slices together and checks if they are equivalent or not
+/// @param str_1 The first slice
+/// @param str_2 The second slice
+bool streql(const StringSlice* str_1, const StringSlice* str_2) {
+    return strcmp(str_1->begin, str_2->begin) == 0;
 }
