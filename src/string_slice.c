@@ -24,16 +24,25 @@ Slice* string_to_slice(const char* string) {
 Slice* slice_from_range(char* string, u64 offset, u64 length) {
     // this code feels really dirty, pointer arithmetic is weird...
 
-    if(offset > strlen(string)) {
+    if(offset > strlen(string)) { // offset is larger than string length
         (string + strlen(string))[0] = '\0'; // need to truncate string so that string_to_slice() works properly
-        return (Slice){ .begin = (char*)(string + strlen(string)), .len = 0};
+				Slice* return_slice = (Slice*)malloc((strlen(string) * sizeof(char)) + sizeof(size_t));
+				Slice temp = (Slice){ .begin = (char*)(string + strlen(string)), .len = 0};
+				memcpy(return_slice, &temp, (strlen(string) * sizeof(char)) + sizeof(size_t));
+        return return_slice; 
     }
-    if(length <= strlen(string + offset)) {
+    if(length <= strlen(string + offset)) { // given length is larger than or equal to calculated range
         (string + offset)[length] = '\0'; // need to truncate string so that string_to_slice() works properly
-        return (Slice){ .begin = (char*)(string + offset), .len = length};
-    } else {
+				Slice* return_slice = (Slice*)malloc((strlen(string + offset) * sizeof(char)) + sizeof(size_t));
+				Slice temp = (Slice){ .begin = (char*)(string + offset), .len = length};
+				memcpy(return_slice, &temp, (strlen(string + offset) * sizeof(char)) + sizeof(size_t));
+        return return_slice;
+    } else { // given length is smaller than calculated range
         u64 offsetted_string_length = strlen(string + offset);
-        return (Slice) { .begin = (char*)(string + offset), .len = offsetted_string_length};
+				Slice* return_slice = (Slice*)malloc(strlen(string + offset) * sizeof(char) + sizeof(size_t));
+				Slice temp = (Slice) { .begin = (char*)(string + offset), .len = offsetted_string_length};
+				memcpy(return_slice, &temp, (strlen(string + offset) * sizeof(char)) + sizeof(size_t));
+        return return_slice; 
     }
 }
 

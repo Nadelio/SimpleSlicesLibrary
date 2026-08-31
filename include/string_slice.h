@@ -22,7 +22,7 @@ typedef struct {
 } Slice;
 
 // @brief A string that can be used to concatenate to
-typede struct {
+typedef struct {
 	size_t used_capacity;
 	size_t total_capacity;
 	char* buffer;
