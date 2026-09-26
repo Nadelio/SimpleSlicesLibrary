@@ -53,6 +53,14 @@ target_include_directories(string_slice PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
+include(CTest)
+
+if(BUILD_TESTING)
+    add_executable(string_slice_tests tests/test_string_slice.c)
+    target_link_libraries(string_slice_tests PRIVATE string_slice)
+    add_test(NAME string_slice_tests COMMAND string_slice_tests)
+endif()
+
 include(GNUInstallDirs)
 
 install(TARGETS string_slice

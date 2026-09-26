@@ -15,6 +15,8 @@ typedef int16_t  i16;
 typedef int32_t  i32;
 typedef int64_t  i64;
 
+#define SLICE_NPOS ((size_t)-1)
+
 /// @brief A C string with an enforced length
 typedef struct {
     size_t len;
@@ -36,16 +38,19 @@ void* memzero(void* destination, size_t count);
 // Function declarations
 /// @brief Converts a slice back into a standard C string
 /// @param slice The source Slice
+/// @return A newly allocated, null-terminated string that must be freed by the caller, or NULL on failure
 char* slice_to_string(const Slice slice);
 
 /// @brief Converts a string to a Slice
 /// @param string The source string
+/// @return A newly allocated Slice that must be freed by the caller, or NULL on failure
 Slice* string_to_slice(const char* string);
 
 /// @brief Creates a Slice given a beginning offset and a total length
 /// @param string The source string
 /// @param offset The offset of the start of the slice
 /// @param length The total length of the slice
+/// @return A newly allocated Slice that must be freed by the caller, or NULL on failure
 Slice* slice_from_range(char* string, size_t offset, size_t length);
 
 /// @brief Compares two slices together and checks if they are equivalent or not
@@ -66,11 +71,13 @@ Buffer* concat_cstr(Buffer* buffer, char* cstr);
 /// @brief Find the first occurrence of a specific character in a Slice and return the index of that character
 /// @param slice The slice to search for the character in
 /// @param search_char The character to search for in the slice
+/// @return The character index, or SLICE_NPOS if it was not found
 size_t find_first(Slice* slice, char search_char);
 
 /// @brief Find the first occurrence of a specific character in a Buffer and return the index of that character
 /// @param buffer The buffer to search for the character in
 /// @param search_char The character to search for in the buffer
+/// @return The character index, or SLICE_NPOS if it was not found
 size_t find_first_in_buffer(Buffer* buffer, char search_char);
 
 /// @brief Compare to slices together and return a 1 if s1 > s2, return 0 if s1 == s2, and return -1 if s1 < s2
@@ -85,11 +92,13 @@ i8 buffer_cmp(Buffer* b1, Buffer* b2);
 
 /// @brief Convert the given buffer into a Slice struct and return the pointer to that Slice
 /// @param buffer The buffer to convert into a slice 
+/// @return A newly allocated Slice that must be freed by the caller, or NULL on failure
 Slice* buffer_to_slice(Buffer* buffer);
 
 /// @brief Convert the given Slice into a Buffer and return the pointer to that Buffer
 /// @param slice The slice to convert into a buffer
 /// @param capacity The total capacity to allocate for the buffer
+/// @return A newly allocated Buffer whose buffer and struct must be freed by the caller, or NULL on failure
 Buffer* slice_to_buffer(Slice* slice, size_t capacity);
 
 #endif // STRING_SLICE_H
